@@ -1,2 +1,2 @@
-# JYNSURLProtocol
-NSURLProtocol使用
+# NSURLProtocol
+NSURLProtocol example
