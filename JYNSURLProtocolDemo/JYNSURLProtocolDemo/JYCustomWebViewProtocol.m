@@ -28,7 +28,7 @@ static NSString * const hasInitKey = @"JYCustomWebViewProtocolKey";
 {
     if ([request.URL.scheme isEqualToString:@"http"]) {
         NSString *str = request.URL.path;
-        //只处理http请求的图片
+
         if (([str hasSuffix:@".png"] || [str hasSuffix:@".jpg"] || [str hasSuffix:@".gif"])
             && ![NSURLProtocol propertyForKey:hasInitKey inRequest:request]) {
             
@@ -42,21 +42,27 @@ static NSString * const hasInitKey = @"JYCustomWebViewProtocolKey";
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
     
     NSMutableURLRequest *mutableReqeust = [request mutableCopy];
-    //这边可用干你想干的事情。。更改地址，提取里面的请求内容，或者设置里面的请求头。。
+
     return mutableReqeust;
 }
 
 - (void)startLoading
 {
     NSMutableURLRequest *mutableReqeust = [[self request] mutableCopy];
-    //做下标记，防止递归调用
+    
+    // prevent recursive call
     [NSURLProtocol setProperty:@YES forKey:hasInitKey inRequest:mutableReqeust];
     
-    //查看本地是否已经缓存了图片
-    NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
-
-    NSData *data = [[SDImageCache sharedImageCache] diskImageDataBySearchingAllPathsForKey:key];
+    //check if we already have cache image
+//    NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
+//    NSData *data = [[SDImageCache sharedImageCache] diskImageDataBySearchingAllPathsForKey:key];
     
+//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"bd_logo" ofType:@"png"];
+//    NSData *data = [NSData dataWithContentsOfFile:imagePath];
+    
+    UIImage *image = [UIImage imageNamed:@"bd_logo.png"];
+    NSData *data = UIImagePNGRepresentation(image);
+
     if (data) {
         NSURLResponse *response = [[NSURLResponse alloc] initWithURL:mutableReqeust.URL
                                                             MIMEType:[NSData sd_contentTypeForImageData:data]
@@ -101,7 +107,7 @@ static NSString * const hasInitKey = @"JYCustomWebViewProtocolKey";
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     UIImage *cacheImage = [UIImage sd_imageWithData:self.responseData];
-    //利用SDWebImage提供的缓存进行保存图片
+    // cache our image
     [[SDImageCache sharedImageCache] storeImage:cacheImage
                            recalculateFromImage:NO
                                       imageData:self.responseData

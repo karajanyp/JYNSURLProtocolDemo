@@ -45,10 +45,21 @@
 
 - (IBAction)pressedButtonLoadWebView:(id)sender
 {
+    // method 1
     NSString* path = [[NSBundle mainBundle] pathForResource:@"local" ofType:@"html"];
     NSURL* url = [NSURL fileURLWithPath:path];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     [self.webView loadRequest:request];
+    
+    // method 2
+    //    NSString * localHtmlFilePath = [[NSBundle mainBundle] pathForResource:@"local" ofType:@"html"];
+    //    NSString * localHtmlFileURL = [NSString stringWithFormat:@"file://%@", localHtmlFilePath];
+    //    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:localHtmlFileURL]]];
+    
+    // method 3
+    //    NSString * localHtmlFilePath = [[NSBundle mainBundle] pathForResource:@"local" ofType:@"html"];
+    //    NSString *html = [NSString stringWithContentsOfFile:localHtmlFilePath encoding:NSUTF8StringEncoding error:nil];
+    //    [self.webView loadHTMLString:html baseURL:nil];
 }
 
 #pragma mark - NSURLConnectionDelegate
