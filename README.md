@@ -1,2 +1,2 @@
 # NSURLProtocol
-NSURLProtocol example
+NSURLProtocol example for NSURLConnection and UIWebView
